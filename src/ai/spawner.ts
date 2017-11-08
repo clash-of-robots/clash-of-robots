@@ -1,6 +1,6 @@
 import { Runner } from '../types/Spawner';
 
-class Spawner<FOW, Round, Output> implements Runner<FOW, Round, Output> {
+export class Spawner<FOW, Round, Output> implements Runner<FOW, Round, Output> {
   fn: any;
 
   async loadScript(script: string) {
