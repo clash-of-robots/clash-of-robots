@@ -1,4 +1,4 @@
-import Game, { AI, functionSpawner } from "../src/Game";
+import Game, { AI, addAI, takeTurn } from "../src/Game";
 import { createStore } from "redux";
 
 interface World {}
@@ -10,18 +10,17 @@ class SimpleAI extends AI<World, World, void> {
 }
 
 describe("Simple AI", () => {
-  let store;
+  let reducer;
   let game: Game<World, any>;
 
   beforeEach(async () => {
-    store = () => ({});
-    game = new Game(store, functionSpawner as any);
+    game = new Game(() => ({}));
     game.registerAI("simple", () => new SimpleAI());
   });
 
   it("sdf", async () => {
     const ai = new SimpleAI();
-    await game.addAI("simple", 'module.exports = [{type:"TEST"}]');
-    await game.run(null);
+    await game.store.dispatch(addAI("simple", 'module.exports = [{type:"TEST"}]'));
+    await game.store.dispatch(takeTurn(null));
   });
 });

@@ -1,26 +1,42 @@
 import AI from "./ai/AI";
 import Spawner from "./types/Spawner";
 import * as uuid from "uuid";
-import { createStore, Store, Action, Reducer, applyMiddleware } from "redux";
+import { createStore, Store, Action, Reducer, applyMiddleware, combineReducers } from "redux";
 import functionSpawner from './ai/spawner';
 
 export { default as AI } from "./ai/AI";
 export { default as functionSpawner } from "./ai/spawner";
 export { addAI, takeTurn } from "./actions";
 
+type StoreType<World> = {
+  [name: string]: any,
+  game: World
+};
+
+export interface Options {
+  spawner?: Spawner,
+  additionalReducers?: {[name: string]: Reducer<any>};
+}
+
 class Game<World, Round> {
   private _ais: AI<World, any, Round>[] = [];
   private _spawner: Spawner;
-  private _store: Store<World>;
+  private _store: Store<StoreType<World>>;
   private _aiTypes: { [id: string]: () => AI<World, any, Round> } = {};
 
-  constructor(reducer: Reducer<World>, spawner: Spawner = functionSpawner as any) {
-    const store = createStore<World>(
-      reducer,
+  constructor(reducer: Reducer<World>, {
+    spawner = functionSpawner,
+    additionalReducers = {},
+  }: Options = {}) {
+    const store = createStore<StoreType<World>>(
+      combineReducers({
+        game: reducer,
+        ...additionalReducers,
+      }),
       applyMiddleware(this.middleware.bind(this))
     );
     this._store = store;
-    this._spawner = spawner;
+    this._spawner = spawner as any;
   }
 
   get store() {
@@ -29,12 +45,12 @@ class Game<World, Round> {
 
   middleware(store: Store<World>) {
     return (next: any) => async (action: any) => {
-      if (action.type === "TAKE_TURN") {
+      if (action.type === "@@COR//TAKE_TURN") {
         return this.run(action.payload);
-      } else if (action.type === "ADD_AI") {
+      } else if (action.type === "@@COR//ADD_AI") {
         const ai = await this.addAI(action.payload.ai, action.payload.script);
         return next({
-          type: "AI_ADDED",
+          type: "@@COR//AI_ADDED",
           payload: {
             id: ai.id,
             type: action.payload.ai,
@@ -61,7 +77,7 @@ class Game<World, Round> {
 
   async run(round: Round) {
     for (let ai of this._ais) {
-      const outputs = await ai._run(this._store.getState(), round);
+      const outputs = await ai._run(this._store.getState().game, round);
       for (let output of outputs) {
         await this._store.dispatch(output);
       }

@@ -29,7 +29,7 @@ const reducer = combineReducers({
   counter,
 });
 
-const game = new ClashOfRobots();
+const game = new ClashOfRobots(reducer);
 ```
 
 ### Creating AI types
@@ -84,4 +84,4 @@ game.store.dispatch(takeTurn());
 
 ### Showing the World
 
-As the store behind the game is a regular `redux` store, all methods apply,  `game.store.subscribe`, `game.store.getState` are both valid, as well as using a library such as `react-redux` for binding to `react` components
+As the store behind the game is a regular `redux` store, all methods apply,  `game.store.subscribe`, `game.store.getState` are both valid, as well as using a library such as `react-redux` for binding to `react` components. Be ware that the game reducer is stored inside `game` in the store
