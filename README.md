@@ -6,6 +6,8 @@ A simple engine for creating AI vs. AI games
 
 ## Getting started
 
+Warning, there has been no proof reading of this text yet, so while the project should be ready to use, the text describing it is still very much a work in progress
+
 [Playground / Demo](https://codepen.io/morten-olsen/pen/NwbJKZ)
 
 ### Install
@@ -124,3 +126,44 @@ const game = ClashOfRobots(reducer, {
 ### Showing the World
 
 As the store behind the game is a regular `redux` store, all methods apply,  `game.store.subscribe`, `game.store.getState` are both valid, as well as using a library such as `react-redux` for binding to `react` components. Be ware that the game reducer is stored inside `game` in the store
+
+## Advanced topics
+
+### Spawners
+
+The game is centered around spawners, which are small units, which get loaded with a code string and then they are responsible for executing that code when invoked. With no modification the spawner used is the `javascript-function` spawner, which simply uses `new Function(...)` to create a function to be called. This however will not be the ideal solution for many cases, for instance, if running on a server, that would give the AI access to all node APIs. Therefore it is a good idea to opt for another spawner.
+These are at the moment a work in progress, but the once that I am working on are:
+
+* **fork-vm** - forking a new node process, with the code running inside a VM to protect the system
+* **http** - running on an http API, so AI agents can live on completely separate systems
+* **tcp** - same as http, just over an TCP socket instead
+* **web-worker** - create a new browser tread and then uses postMessage to communicate
+* **stdinout** - using a process stdin and stdout to send and receive, which allows for a variety of other languages to act as AIs
+
+And i might create a **web-rtc** if i get the time.
+
+But as the list shows, pretty much anything which can receive and send JSON can act as an agent.
+
+To create a spawner, simply create a method with `loadScript` and `execute`
+
+below is the `javascript-function` for reference
+
+```javascript
+class JavascriptFunctionSpawner {
+  async loadScript(script) {
+    this.fn = new Function('module', 'fow', 'round', script)
+  }
+
+  async execute(fow, round) {
+    const module = { exports: [] };
+    await this.fn(module, fow, round);
+    return module.exports;
+  }
+}
+
+game.registerSpawner('javascript-function', () => new JavascriptFunctionSpawner());
+
+game.store.dispatch(addAI('simple', '...', {
+  spawner: 'javascript-function',
+}));
+```
