@@ -63,7 +63,7 @@ class Game<World, Round> {
       applyMiddleware(this.middleware.bind(this), ...middlewares),
     );
     this._store = store;
-    this.registerSpawner('javascript-function', functionSpawner() as any);
+    this.registerSpawner('javascript-function', functionSpawner());
     this._defaultSpawner = defaultSpawner;
     this._findWinner = findWinner;
     Object.keys(aiTypes).forEach(name => {

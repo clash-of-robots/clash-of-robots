@@ -28,4 +28,4 @@ export class Spawner<FOW, Round, Output> implements Runner<FOW, Round, Output> {
   }
 }
 
-export default (api?: any) => () => new Spawner(api);
+export default (api?: any) => () => new Spawner<any, any, any>(api);
