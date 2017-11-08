@@ -24,7 +24,7 @@
     "build": "tsc",
     "test:unit": "mocha -r ts-node/register test/**/*.spec.ts",
     "test": "npm run test:unit",
-    "prepublish": "npm run build && npm version patch",
+    "prepublish": "npm run build",
     "precommit": "prettier ./**/*.ts",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
