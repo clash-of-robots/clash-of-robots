@@ -6,6 +6,12 @@ A simple engine for creating AI vs. AI games
 
 ## Getting started
 
+### Install
+
+```bash
+npm install clash-of-robots
+```
+
 ### Creating a games
 
 When creating a game only one things is needed, a redux style `reducer`. Other options are available, and will be explained later
