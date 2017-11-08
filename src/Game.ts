@@ -2,6 +2,7 @@ import AI from "./ai/AI";
 import Spawner from "./types/Spawner";
 import * as uuid from "uuid";
 import { createStore, Store, Action, Reducer, applyMiddleware } from "redux";
+import functionSpawner from './ai/spawner';
 
 export { default as AI } from "./ai/AI";
 export { default as functionSpawner } from "./ai/spawner";
@@ -13,7 +14,7 @@ class Game<World, Round> {
   private _store: Store<World>;
   private _aiTypes: { [id: string]: () => AI<World, any, Round> } = {};
 
-  constructor(reducer: Reducer<World>, spawner: Spawner) {
+  constructor(reducer: Reducer<World>, spawner: Spawner = functionSpawner as any) {
     const store = createStore<World>(
       reducer,
       applyMiddleware(this.middleware.bind(this))

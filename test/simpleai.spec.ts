@@ -1,6 +1,5 @@
-import Game, { AI } from "../src/Game";
+import Game, { AI, functionSpawner } from "../src/Game";
 import { createStore } from "redux";
-import spawner from "./utils/spawner";
 
 interface World {}
 
@@ -16,7 +15,7 @@ describe("Simple AI", () => {
 
   beforeEach(async () => {
     store = () => ({});
-    game = new Game(store, spawner as any);
+    game = new Game(store, functionSpawner as any);
     game.registerAI("simple", () => new SimpleAI());
   });
 

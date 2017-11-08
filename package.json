@@ -14,29 +14,40 @@
     "chai": "^4.1.2",
     "coveralls": "^3.0.0",
     "github-changes": "^1.1.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.3.0",
     "mocha": "^4.0.1",
     "nyc": "^11.3.0",
     "prettier": "^1.8.1",
     "semantic-release": "^8.2.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.6.1",
+    "redux": "^3.7.2"
   },
   "dependencies": {
-    "redux": "^3.7.2",
     "uuid": "^3.1.0"
+  },
+  "peerDependencies": {
+    "redux": "^3.7.2"
   },
   "scripts": {
     "build": "tsc",
     "test:unit": "nyc mocha -- test/**/*.spec.ts",
+    "precommit": "prettier ./**/*.ts",
     "test": "npm run test:unit",
     "prepublish": "npm run build",
-    "precommit": "prettier ./**/*.ts",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/morten-olsen/clash-of-robots.git"
+  },
+  "lint-staged": {
+    "*.{js,ts,json,css}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "nyc": {
     "extension": [
