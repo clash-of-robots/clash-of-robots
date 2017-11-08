@@ -24,4 +24,3 @@ deploy:
   file: dist/*
   on:
     repo: morten-olsen/clash-of-robots
-    tags: true
