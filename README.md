@@ -10,7 +10,7 @@ A simple engine for creating AI vs. AI games
 
 ### Install
 
-#### Npm / Yarn
+#### npm / yarn
 
 ```bash
 npm install clash-of-robots
@@ -18,7 +18,7 @@ npm install clash-of-robots
 yarn add clash-of-robots
 ```
 
-####  Browser/codepen
+####  Browser/CDN
 
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.min.js"></script>
