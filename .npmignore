@@ -1,4 +1,7 @@
 .git
 node_modules
-src
-test
+/src
+/test
+npm-debug.log
+.nyc_output
+coverage
