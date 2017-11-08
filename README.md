@@ -10,6 +10,10 @@ A simple engine for creating AI vs. AI games
 
 ```bash
 npm install clash-of-robots
+
+# or
+
+yarn add clash-of-robots
 ```
 
 ### Creating a games
