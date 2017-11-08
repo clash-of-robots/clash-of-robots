@@ -1,14 +1,16 @@
 {
   "name": "clash-of-robots",
   "version": "0.0.0-development",
-  "main": "dist/src/Game.js",
+  "main": "build/src/Game.js",
   "license": "MIT",
   "devDependencies": {
     "@types/chai": "^4.0.4",
     "@types/mocha": "^2.2.44",
     "@types/redux": "^3.6.0",
     "@types/uuid": "^3.4.3",
+    "awesome-typescript-loader": "^3.3.0",
     "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
@@ -19,10 +21,11 @@
     "mocha": "^4.0.1",
     "nyc": "^11.3.0",
     "prettier": "^1.8.1",
+    "redux": "^3.7.2",
     "semantic-release": "^8.2.0",
     "ts-node": "^3.3.0",
     "typescript": "^2.6.1",
-    "redux": "^3.7.2"
+    "webpack": "^3.8.1"
   },
   "dependencies": {
     "uuid": "^3.1.0"
@@ -32,12 +35,12 @@
   },
   "scripts": {
     "build": "tsc",
+    "bundle": "webpack",
     "test:unit": "nyc mocha -- test/**/*.spec.ts",
     "precommit": "lint-staged",
     "test": "npm run test:unit",
     "prepublish": "npm run build",
-    "semantic-release":
-      "semantic-release pre && npm publish && semantic-release post",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "publish": "git add --all && git cz && git push"
   },
@@ -46,13 +49,27 @@
     "url": "https://github.com/morten-olsen/clash-of-robots.git"
   },
   "lint-staged": {
-    "*.{js,ts}": ["prettier --write", "git add"]
+    "*.{js,ts}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "nyc": {
-    "extension": [".ts", ".tsx"],
-    "exclude": ["test/**/*"],
-    "reporter": ["lcov", "text-summary", "html"],
-    "require": ["ts-node/register"]
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "test/**/*"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary",
+      "html"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
   },
   "prettier": {
     "tabWidth": 2,

@@ -17,8 +17,8 @@ import functionSpawner from './ai/spawner';
 import ais from './reducers/ais';
 
 export { default as AI } from './ai/AI';
-export { default as functionSpawner } from './ai/spawner';
 export { addAI, takeTurn, reset } from './actions';
+export { combineReducers } from 'redux';
 
 type StoreType<World> = {
   [name: string]: any;

@@ -1,18 +1,27 @@
 language: node_js
 cache:
   directories:
-    - ~/.npm
+  - "~/.npm"
 notifications:
   email: false
 node_js:
-  - '8'
+- '8'
 install:
-  - npm install
+- npm install
 script:
-  - npm test
+- npm test
+- npm run bundle
 after_success:
-  - npm run semantic-release
-  - npm run coverage
+- npm run semantic-release
+- npm run coverage
 branches:
   except:
-    - /^v\d+\.\d+\.\d+$/
+  - "/^v\\d+\\.\\d+\\.\\d+$/"
+deploy:
+  provider: releases
+  api_key:
+    secure: OX5VT1r92KxyQ0dhM5/JuZ8M2FKeqc3y/OeEeii5bO3GkxfXgGSo1VbwNR+49kdHwh7wscMUK98JF7eSFUWwJeP3RULiSv7KOPTHTnUdKNIYsb8p1payHEWmxaAGahxOLyIU1svch6PX6Izi8EYHgY/q9bja6fFUL8Qwwr4QC53px5tokRWIaQylSa/xhHjQGluKOIkPY9ytw5v3C4eEtGwTyO45mgh7LYw8YVb9C3R8V5/Qz7Nq3OO17YycR3A5Pn8H8bMbd0ZPb7A3gBgfRt+oqsFsvA710++ck9OB+NvTfYkP0JeZYyVKjunsEPIZ5j/HyfhO+Twj0MRlQoAUOzPIcIdnncKM+Y4+rHhTPDVCnraJiq/ocmDUVFW8t9b77dbBxLU0A+NmBdhVaLM1Y/9yG9DhklthM4+92qa1L1bd9QDoOKDe8Y21CROhLtpq8FCPD8jICPL7DIAeIp0iO8GlT4xdoAhQssrV7LwCLsrELV3AAy+0299igLvIrnauPzBXap7EbTrdPRDpjaPJZGIrlsQee3RkbtxP5jfbteuSIiQ3xX60bWgqjenJeQsbGeloWq17ddSaYL9Usw42I53mxR2N/qjoqNQtsAmW8Dp4nK+frXBSyftd1BxPY8RyEJbMlhkQsSRvkAFHfjvbo7gU7A5l5Nca7KNExehPCFI=
+  file: dist/*
+  on:
+    repo: morten-olsen/clash-of-robots
+    tags: true
