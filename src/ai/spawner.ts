@@ -1,10 +1,12 @@
-import { Runner } from "../types/Spawner";
+/** @format */
+
+import { Runner } from '../types/Spawner';
 
 export class Spawner<FOW, Round, Output> implements Runner<FOW, Round, Output> {
   fn: any;
 
   async loadScript(script: string) {
-    this.fn = new Function("module", "world", "round", script);
+    this.fn = new Function('module', 'world', 'round', script);
   }
 
   async execute(module: any, fow: FOW, round: Round) {

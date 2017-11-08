@@ -1,11 +1,12 @@
-import Game, { AI, addAI, takeTurn } from "../src/Game";
-import { createStore } from "redux";
+/** @format */
+
+import Game, { AI, addAI, takeTurn } from '../src/Game';
+import { createStore } from 'redux';
 import { expect } from 'chai';
 
 type World = number;
-
 interface Round {
-  increment: boolean
+  increment: boolean;
 }
 
 const reducer = (state = 0, action: any) => {
@@ -19,17 +20,22 @@ const reducer = (state = 0, action: any) => {
   }
 };
 
-describe("simple AI", () => {
+describe('simple AI', () => {
   let game: Game<World, Round>;
 
   beforeEach(async () => {
     game = new Game(reducer);
   });
 
-  it("should be able to run a few rounds", async () => {
-    await game.store.dispatch(addAI("simple", `
+  it('should be able to run a few rounds', async () => {
+    await game.store.dispatch(
+      addAI(
+        'simple',
+        `
       module.exports = [round.increment ? {type:"INCREMENT"} : {type:"DECREMENT"}]
-    `));
+    `,
+      ),
+    );
     await game.store.dispatch(takeTurn({ increment: true }));
     expect(game.store.getState()).to.be.eql({
       ais: {

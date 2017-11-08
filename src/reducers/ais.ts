@@ -1,3 +1,5 @@
+/** @format */
+
 const createDefaults = () => ({
   types: [],
 });
@@ -8,7 +10,7 @@ export default (state = createDefaults(), action: any) => {
       return {
         ...state,
         types: action.payload,
-      }
+      };
     default:
       return state;
   }

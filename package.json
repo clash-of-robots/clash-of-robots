@@ -1,4 +1,6 @@
 {
+  /** @format */
+
   "name": "clash-of-robots",
   "version": "0.0.0-development",
   "main": "dist/src/Game.js",
@@ -52,5 +54,15 @@
     "exclude": ["test/**/*"],
     "reporter": ["lcov", "text-summary", "html"],
     "require": ["ts-node/register"]
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "printWidth": 80,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "insertPragma": true
   }
 }

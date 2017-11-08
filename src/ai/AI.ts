@@ -1,4 +1,6 @@
-import spawner, { Runner } from "../types/Spawner";
+/** @format */
+
+import spawner, { Runner } from '../types/Spawner';
 
 class AI<World, FOW, Round> {
   private _runner: Runner<FOW, Round, any>;
@@ -19,7 +21,7 @@ class AI<World, FOW, Round> {
     output: any,
     fogOfWar: FOW,
     world: World,
-    round: Round
+    round: Round,
   ): undefined | Error[] {
     return undefined;
   }
