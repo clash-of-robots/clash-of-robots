@@ -6,6 +6,8 @@ A simple engine for creating AI vs. AI games
 
 ## Getting started
 
+[Playground / Demo](https://codepen.io/morten-olsen/pen/NwbJKZ)
+
 ### Install
 
 ```bash
