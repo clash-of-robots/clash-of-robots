@@ -3,6 +3,7 @@
 import AI from './ai/AI';
 import Spawner from './types/Spawner';
 import * as uuid from 'uuid';
+import reset from './utils/reset';
 import {
   createStore,
   Store,
@@ -17,7 +18,7 @@ import ais from './reducers/ais';
 
 export { default as AI } from './ai/AI';
 export { default as functionSpawner } from './ai/spawner';
-export { addAI, takeTurn } from './actions';
+export { addAI, takeTurn, reset } from './actions';
 
 type StoreType<World> = {
   [name: string]: any;
@@ -54,7 +55,7 @@ class Game<World, Round> {
   ) {
     const store = createStore<StoreType<World>>(
       combineReducers({
-        game: reducer,
+        game: reset(reducer),
         ais,
         ...additionalReducers,
       }),
@@ -71,6 +72,10 @@ class Game<World, Round> {
 
   get store() {
     return this._store;
+  }
+
+  get aiCount() {
+    return this._ais.length;
   }
 
   middleware(store: Store<World>) {
@@ -92,6 +97,9 @@ class Game<World, Round> {
           },
         });
       } else {
+        if (action.type === '@@COR//RESET' && action.payload.removeAIs) {
+          this._ais = [];
+        }
         return next(action);
       }
     };

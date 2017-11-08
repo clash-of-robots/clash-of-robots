@@ -38,7 +38,8 @@
     "prepublish": "npm run build",
     "semantic-release":
       "semantic-release pre && npm publish && semantic-release post",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "publish": "git add --all && git cz && git push"
   },
   "repository": {
     "type": "git",

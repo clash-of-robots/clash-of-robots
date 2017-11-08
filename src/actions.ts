@@ -9,6 +9,13 @@ export const takeTurn = <Round>(round: Round) => ({
   payload: round,
 });
 
+export const reset = (removeAIs: boolean = false) => ({
+  type: '@@COR//RESET',
+  payload: {
+    removeAIs,
+  },
+});
+
 export const addAI = (
   ai: any,
   script: string,
