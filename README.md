@@ -129,6 +129,27 @@ As the store behind the game is a regular `redux` store, all methods apply,  `ga
 
 ## Advanced topics
 
+### Adding AI api
+
+When using the `javascript-function` spawner it is possible to supply an additional API, which becomes available to the AI script, this is done by registering it as a new spawner, or reregistering
+
+```javascript
+const { functionSpawner } = require('crash-of-robots');
+
+const api = {
+  addNumbers: (a, b) => a + b,
+};
+
+game.registerSpawner('javascript-function', functionSpawner(api));
+
+game.store.dispatch(addAI('simple', `
+  module.exports = [{
+    type: 'ADD_NUMBERS',
+    payload: addNumbers(5, 10),
+  }];
+`));
+```
+
 ### Spawners
 
 The game is centered around spawners, which are small units, which get loaded with a code string and then they are responsible for executing that code when invoked. With no modification the spawner used is the `javascript-function` spawner, which simply uses `new Function(...)` to create a function to be called. This however will not be the ideal solution for many cases, for instance, if running on a server, that would give the AI access to all node APIs. Therefore it is a good idea to opt for another spawner.

@@ -19,6 +19,7 @@ import ais from './reducers/ais';
 export { default as AI } from './ai/AI';
 export { addAI, takeTurn, reset } from './actions';
 export { combineReducers } from 'redux';
+export { default as functionSpawner } from './ai/spawner';
 
 type StoreType<World> = {
   [name: string]: any;
@@ -62,7 +63,7 @@ class Game<World, Round> {
       applyMiddleware(this.middleware.bind(this), ...middlewares),
     );
     this._store = store;
-    this.registerSpawner('javascript-function', functionSpawner as any);
+    this.registerSpawner('javascript-function', functionSpawner() as any);
     this._defaultSpawner = defaultSpawner;
     this._findWinner = findWinner;
     Object.keys(aiTypes).forEach(name => {

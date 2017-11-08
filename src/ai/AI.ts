@@ -28,9 +28,7 @@ class AI<World, FOW, Round> {
 
   async _run(world: World, round: Round) {
     const fog = this.createFogOfWar(world, round);
-    const module = { exports: [] };
-    await this._runner.execute(module, fog, round);
-    const output = module.exports;
+    const output = await this._runner.execute(fog, round);
     const errors = this.validate(output, fog, world, round);
     return output;
   }

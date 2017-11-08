@@ -4,15 +4,28 @@ import { Runner } from '../types/Spawner';
 
 export class Spawner<FOW, Round, Output> implements Runner<FOW, Round, Output> {
   fn: any;
+  api: any;
 
-  async loadScript(script: string) {
-    this.fn = new Function('module', 'world', 'round', script);
+  constructor(api: any = {}) {
+    this.api = api;
   }
 
-  async execute(module: any, fow: FOW, round: Round) {
-    const output = (await this.fn(module, fow, round)) as Output;
-    return output;
+  async loadScript(script: string) {
+    this.fn = new Function(
+      'module',
+      ...Object.keys(this.api),
+      'world',
+      'round',
+      script,
+    );
+  }
+
+  async execute(fow: FOW, round: Round) {
+    const module = { exports: [] };
+    const apiValues = Object.keys(this.api).map(key => this.api[key]);
+    await this.fn(module, ...apiValues, fow, round);
+    return (module.exports as Object) as Output;
   }
 }
 
-export default () => new Spawner();
+export default (api?: any) => () => new Spawner(api);
