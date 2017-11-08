@@ -120,6 +120,7 @@ class Game<World, Round> {
   }
 
   hasWinner() {
+    if (!this._findWinner) return undefined;
     const winner = this._findWinner(this.store.getState().game);
     if (winner) {
       this.store.dispatch({

@@ -51,5 +51,7 @@ describe('simple AI', () => {
     expect(game.store.getState().ais.winner).to.be.eql(undefined);
     await game.store.dispatch(takeTurn(null));
     expect(game.store.getState().ais.winner).to.be.eql(true);
+    await game.store.dispatch(takeTurn(null));
+    expect(game.store.getState().ais.winner).to.be.eql(true);
   });
 });
