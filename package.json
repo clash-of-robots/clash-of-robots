@@ -1,6 +1,6 @@
 {
   "name": "intelligentwar",
-  "version": "0.0.6",
+  "version": "0.0.0-development",
   "main": "dist/src/Game.js",
   "license": "MIT",
   "devDependencies": {
@@ -11,8 +11,10 @@
     "chai": "^4.1.2",
     "github-changes": "^1.1.1",
     "mocha": "^4.0.1",
+    "prettier": "^1.8.1",
     "ts-node": "^3.3.0",
-    "typescript": "^2.6.1"
+    "typescript": "^2.6.1",
+    "semantic-release": "^8.2.0"
   },
   "dependencies": {
     "redux": "^3.7.2",
@@ -22,9 +24,12 @@
     "build": "tsc",
     "test:unit": "mocha -r ts-node/register test/**/*.spec.ts",
     "test": "npm run test:unit",
-    "generate-changelog": "github-changes -o morten-olsen -r clash-of-robots -n ${npm_package_version} --only-pulls",
-    "preversion": "npm test",
-    "version": "npm run generate-changelog && git add CHANGELOG.md",
-    "prepublish": "npm run build && npm version patch"
+    "prepublish": "npm run build && npm version patch",
+    "precommit": "prettier ./**/*.ts",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/morten-olsen/clash-of-robots.git"
   }
 }

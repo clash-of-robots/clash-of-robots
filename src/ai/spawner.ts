@@ -1,16 +1,16 @@
-import { Runner } from '../types/Spawner';
+import { Runner } from "../types/Spawner";
 
 export class Spawner<FOW, Round, Output> implements Runner<FOW, Round, Output> {
   fn: any;
 
   async loadScript(script: string) {
-    this.fn = new Function('module', 'world', 'round', script);
+    this.fn = new Function("module", "world", "round", script);
   }
 
   async execute(module: any, fow: FOW, round: Round) {
-    const output = await this.fn(module, fow, round) as Output;
+    const output = (await this.fn(module, fow, round)) as Output;
     return output;
-  };
+  }
 }
 
 export default () => new Spawner();

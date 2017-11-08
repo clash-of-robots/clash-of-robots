@@ -1,4 +1,4 @@
-import spawner, { Runner } from '../types/Spawner';
+import spawner, { Runner } from "../types/Spawner";
 
 class AI<World, FOW, Round> {
   private _runner: Runner<FOW, Round, any>;
@@ -11,16 +11,21 @@ class AI<World, FOW, Round> {
   }
 
   protected createFogOfWar(world: World, round: Round): FOW {
-    return world as Object as FOW;
+    return (world as Object) as FOW;
   }
 
-  protected validate(output: any, fogOfWar: FOW, world: World, round: Round): undefined | Error[] {
+  protected validate(
+    output: any,
+    fogOfWar: FOW,
+    world: World,
+    round: Round
+  ): undefined | Error[] {
     return undefined;
-  };
+  }
 
   async _run(world: World, round: Round) {
     const fog = this.createFogOfWar(world, round);
-    const module = { exports: []};
+    const module = { exports: [] };
     await this._runner.execute(module, fog, round);
     const output = module.exports;
     const errors = this.validate(output, fog, world, round);

@@ -1,24 +1,22 @@
-import AI from './ai/AI';
-import Spawner from './types/Spawner';
-import * as uuid from 'uuid';
-import { createStore, Store, Action, Reducer, applyMiddleware } from 'redux';
+import AI from "./ai/AI";
+import Spawner from "./types/Spawner";
+import * as uuid from "uuid";
+import { createStore, Store, Action, Reducer, applyMiddleware } from "redux";
 
-export { default as AI } from './ai/AI';
-export { default as functionSpawner } from './ai/spawner';
-export { addAI, takeTurn } from './actions';
+export { default as AI } from "./ai/AI";
+export { default as functionSpawner } from "./ai/spawner";
+export { addAI, takeTurn } from "./actions";
 
 class Game<World, Round> {
   private _ais: AI<World, any, Round>[] = [];
   private _spawner: Spawner;
   private _store: Store<World>;
-  private _aiTypes: {[id: string]:() => AI<World, any, Round>} = {};
+  private _aiTypes: { [id: string]: () => AI<World, any, Round> } = {};
 
   constructor(reducer: Reducer<World>, spawner: Spawner) {
     const store = createStore<World>(
       reducer,
-      applyMiddleware(
-        this.middleware.bind(this),
-      ),
+      applyMiddleware(this.middleware.bind(this))
     );
     this._store = store;
     this._spawner = spawner;
@@ -30,22 +28,22 @@ class Game<World, Round> {
 
   middleware(store: Store<World>) {
     return (next: any) => async (action: any) => {
-      if (action.type === 'TAKE_TURN') {
+      if (action.type === "TAKE_TURN") {
         return this.run(action.payload);
-      } else if (action.type === 'ADD_AI') {
+      } else if (action.type === "ADD_AI") {
         const ai = await this.addAI(action.payload.ai, action.payload.script);
         return next({
-          type: 'AI_ADDED',
+          type: "AI_ADDED",
           payload: {
             id: ai.id,
             type: action.payload.ai,
-            data: action.payload.data,
+            data: action.payload.data
           }
         });
       } else {
         return next(action);
       }
-    }
+    };
   }
 
   registerAI(name: string, creator: () => AI<World, any, Round>) {

@@ -1,12 +1,19 @@
-install: npm install
-script: npm run build
-before_deploy: npm version
-deploy:
-  skip_cleanup: true
-  provider: npm
-  email: morten@olsen.io
-  api_key:
-    secure: tVjjWXb31BK7I7vZTNNUp5BsFndzbc7ekH3I2hfFjOEt75LorfeBacPN/tFstmYEHcFJ3RbUgFsxedFnlCs7xYtWCOXGjhN0/Polff/8tEMu9WOSfmjuMz6yPBgQQJzYRgpq2GbnntBvVgTrYsfL85j/I6GL9OsF5ZFgKXZXFQqNueSoFDfifCpk1TIc1i3satCPUBtpFR/bSvnSfH7FClnFuaQcnFgveG3pSJeeGsjuH0GqxjPWxDtzQxSAu/B9TChyDd745VvgYobl1iYk8ChT7bI3UURlxwheY2L43gTxND0LdJYk0ii87p1v536PfxUP7s3Qrp8D7a0IZjgdTVph6IVXxSX2eJXTuCm3BxO8mskXQKyf099DYfWBxgODjCVwKzqL4PbRM5mUtv4yHbBWhMdL/uBuI2BwaGdnqm8PkzE640qM7aJxDRPmiLCh/E8ajxIQ+l7UwFpi5QrlgktUyCMroK0oqhXWxGwI2hhgcPu6/lUeDM+kKwZrVBEnQ28m+MC2R0RVYYBtzKoCHoCoIiZmv/8LweI19kR3jPicduYTrAMvYkclZEMM6Iov0IzibrtGz5HK0M57ZNZQQrZjUmDA1f6hoeWuTbnJjRdFgmAQV6Qh7aq82GVgWB5/qsbcb019r0UOtcj2/XORwN2H5C+XK6qBXSJsFQgCWx8=
-  on:
-    repo: morten-olsen/clash-of-robots
-    branch: master
+language: node_js
+cache:
+  directories:
+    - ~/.npm
+notifications:
+  email: false
+node_js:
+  - '9'
+  - '8'
+install:
+  - npm install
+script:
+  - npm test
+  - npm build
+after_success:
+  - npm run semantic-release
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
