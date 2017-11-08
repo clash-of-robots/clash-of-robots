@@ -4,6 +4,7 @@ class AI<World, FOW, Round> {
   private _runner: Runner<FOW, Round, any>;
 
   id: string;
+  type: string;
 
   async load(script: string, spawner: spawner) {
     this._runner = spawner();

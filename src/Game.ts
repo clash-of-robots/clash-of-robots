@@ -103,6 +103,7 @@ class Game<World, Round> {
   async addAI(type: string, script: string, spawner?: string) {
     const ai = this._aiTypes[type]();
     ai.id = uuid.v4();
+    ai.type = type;
     const spawnerName = spawner || this._defaultSpawner;
     await ai.load(script, this._spawners[spawnerName]);
     this._ais.push(ai);
@@ -113,7 +114,17 @@ class Game<World, Round> {
     for (let ai of this._ais) {
       const outputs = await ai._run(this._store.getState().game, round);
       for (let output of outputs) {
-        await this._store.dispatch(output);
+
+        await this._store.dispatch({
+          ...output as any,
+          meta: {
+            ...(output as any).meta,
+            ai: {
+              id: ai.id,
+              type: ai.type,
+            },
+          },
+        } as any);
       }
     }
   }
