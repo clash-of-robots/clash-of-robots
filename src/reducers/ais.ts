@@ -7,6 +7,11 @@ const createDefaults = () => ({
 
 export default (state = createDefaults(), action: any) => {
   switch (action.type) {
+    case '@@COR//RESET':
+      return {
+        ...state,
+        winner: undefined,
+      };
     case '@@COR//ADD_AI_TYPE':
       return {
         ...state,
