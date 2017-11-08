@@ -1,0 +1,27 @@
+{
+  "name": "intelligentwar",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.44",
+    "@types/redux": "^3.6.0",
+    "@types/uuid": "^3.4.3",
+    "chai": "^4.1.2",
+    "github-changes": "^1.1.1",
+    "mocha": "^4.0.1",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.6.1"
+  },
+  "dependencies": {
+    "redux": "^3.7.2",
+    "uuid": "^3.1.0"
+  },
+  "scripts": {
+    "test:unit": "mocha -r ts-node/register test/**/*.spec.ts",
+    "generate-changelog": "github-changes -o morten-olsen -r clash-of-robots -n ${npm_package_version} --only-pulls",
+    "preversion": "npm test",
+    "version": "npm run generate-changelog && git add CHANGELOG.md"
+  }
+}
