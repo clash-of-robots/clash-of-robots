@@ -119,12 +119,22 @@ class Game<World, Round> {
     return ai;
   }
 
-  async run(round: Round) {
-    const state = this.store.getState();
-    if (state.ais.winner) {
-      return;
+  hasWinner() {
+    const winner = this._findWinner(this.store.getState().game);
+    if (winner) {
+      this.store.dispatch({
+        type: '@@COR//FOUND_WINNER',
+        payload: winner,
+      });
     }
+  }
+
+  async run(round: Round) {
     for (let ai of this._ais) {
+      const state = this.store.getState();
+      if (state.ais.winner) {
+        return;
+      }
       const outputs = await ai._run(this._store.getState().game, round);
       for (let output of outputs) {
         await this._store.dispatch({
@@ -137,15 +147,7 @@ class Game<World, Round> {
             },
           },
         } as any);
-      }
-    }
-    if (this._findWinner) {
-      const winner = this._findWinner(this.store.getState().game);
-      if (winner) {
-        this.store.dispatch({
-          type: '@@COR//FOUND_WINNER',
-          payload: winner,
-        });
+        this.hasWinner();
       }
     }
   }

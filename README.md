@@ -48,7 +48,7 @@ class SimpleAI extends AI {
 
   validate(outputs, fow, world, round) {
     for (let output of outputs) {
-      if (output.type !== 'INCREMENT' && output.type !== 'INCREMENT') {
+      if (output.type !== 'INCREMENT' && output.type !== 'DECREMENT') {
         return Error('INVALID ACTION');
       }
     }
@@ -80,6 +80,26 @@ To run a round, dispatch a `takeTurn` action, which will cycle through all AIs a
 const { takeTurn } = require('clash-of-robots');
 
 game.store.dispatch(takeTurn());
+```
+
+### Winning the game
+
+A win condition can be added to the game to be evaluated after an AI run to determine if an AI has won the game.
+
+This function is supplied to the game as an option and should return an identification for the winner which will then be store in `state.ais.winner`
+
+Once a winner has been found, `takeTurn` will no longer change anything in the world.
+
+```javascript
+const findWinner = (world) => {
+  if (world === 5) {
+    return 'winner';
+  }
+}
+
+const game = ClashOfRobots(reducer, {
+  findWinner,
+});
 ```
 
 ### Showing the World
