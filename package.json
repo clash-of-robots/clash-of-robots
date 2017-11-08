@@ -1,6 +1,6 @@
 {
   "name": "intelligentwar",
-  "version": "0.0.8",
+  "version": "0.0.6",
   "main": "dist/src/Game.js",
   "license": "MIT",
   "devDependencies": {
@@ -22,7 +22,7 @@
     "build": "tsc",
     "test:unit": "mocha -r ts-node/register test/**/*.spec.ts",
     "test": "npm run test:unit",
-    "generate-changelog": "github-changes -o morten-olsen -r clash-of-robots -n ${npm_package_version} --use-commit-body",
+    "generate-changelog": "github-changes -o morten-olsen -r clash-of-robots -n ${npm_package_version} --only-pulls",
     "preversion": "npm test",
     "version": "npm run generate-changelog && git add CHANGELOG.md",
     "prepublish": "npm run build && npm version patch"
