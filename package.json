@@ -33,10 +33,11 @@
   "scripts": {
     "build": "tsc",
     "test:unit": "nyc mocha -- test/**/*.spec.ts",
-    "precommit": "prettier ./**/*.ts",
+    "precommit": "lint-staged",
     "test": "npm run test:unit",
     "prepublish": "npm run build",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "semantic-release":
+      "semantic-release pre && npm publish && semantic-release post",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
@@ -44,26 +45,12 @@
     "url": "https://github.com/morten-olsen/clash-of-robots.git"
   },
   "lint-staged": {
-    "*.{js,ts,json,css}": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.{js,ts,json,css}": ["prettier --write", "git add"]
   },
   "nyc": {
-    "extension": [
-      ".ts",
-      ".tsx"
-    ],
-    "exclude": [
-      "test/**/*"
-    ],
-    "reporter": [
-      "lcov",
-      "text-summary",
-      "html"
-    ],
-    "require": [
-      "ts-node/register"
-    ]
+    "extension": [".ts", ".tsx"],
+    "exclude": ["test/**/*"],
+    "reporter": ["lcov", "text-summary", "html"],
+    "require": ["ts-node/register"]
   }
 }
