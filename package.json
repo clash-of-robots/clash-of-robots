@@ -1,6 +1,4 @@
 {
-  /** @format */
-
   "name": "clash-of-robots",
   "version": "0.0.0-development",
   "main": "dist/src/Game.js",
@@ -47,7 +45,7 @@
     "url": "https://github.com/morten-olsen/clash-of-robots.git"
   },
   "lint-staged": {
-    "*.{js,ts,json,css}": ["prettier --write", "git add"]
+    "*.{js,ts}": ["prettier --write", "git add"]
   },
   "nyc": {
     "extension": [".ts", ".tsx"],

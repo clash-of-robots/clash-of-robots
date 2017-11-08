@@ -1,6 +1,8 @@
-import AI from "./ai/AI";
-import Spawner from "./types/Spawner";
-import * as uuid from "uuid";
+/** @format */
+
+import AI from './ai/AI';
+import Spawner from './types/Spawner';
+import * as uuid from 'uuid';
 import {
   createStore,
   Store,
@@ -9,41 +11,47 @@ import {
   applyMiddleware,
   combineReducers,
   Middleware,
-} from "redux";
+} from 'redux';
 import functionSpawner from './ai/spawner';
 import ais from './reducers/ais';
 
-export { default as AI } from "./ai/AI";
-export { default as functionSpawner } from "./ai/spawner";
-export { addAI, takeTurn } from "./actions";
+export { default as AI } from './ai/AI';
+export { default as functionSpawner } from './ai/spawner';
+export { addAI, takeTurn } from './actions';
 
 type StoreType<World> = {
-  [name: string]: any,
-  game: World
+  [name: string]: any;
+  game: World;
 };
 
 export interface Options<World, Round> {
   defaultSpawner?: string;
-  additionalReducers?: {[name: string]: Reducer<any>};
-  aiTypes?: {[name: string]: () => AI<World, any, Round> };
+  additionalReducers?: { [name: string]: Reducer<any> };
+  aiTypes?: { [name: string]: () => AI<World, any, Round> };
   middlewares?: Middleware[];
+  findWinner?: (world: World) => any;
 }
 
 class Game<World, Round> {
   private _ais: AI<World, any, Round>[] = [];
-  private _spawners: {[name: string]: Spawner} = {};
+  private _spawners: { [name: string]: Spawner } = {};
   private _store: Store<StoreType<World>>;
   private _aiTypes: { [id: string]: () => AI<World, any, Round> } = {};
   private _defaultSpawner: string;
+  private _findWinner: (world: World) => any;
 
-  constructor(reducer: Reducer<World>, {
-    additionalReducers = {},
-    aiTypes = {
-      simple: () => new AI(),
-    },
-    middlewares = [],
-    defaultSpawner = 'javascript-function',
-  }: Options<World, Round> = {}) {
+  constructor(
+    reducer: Reducer<World>,
+    {
+      additionalReducers = {},
+      aiTypes = {
+        simple: () => new AI(),
+      },
+      findWinner,
+      middlewares = [],
+      defaultSpawner = 'javascript-function',
+    }: Options<World, Round> = {},
+  ) {
     const store = createStore<StoreType<World>>(
       combineReducers({
         game: reducer,
@@ -55,6 +63,7 @@ class Game<World, Round> {
     this._store = store;
     this.registerSpawner('javascript-function', functionSpawner as any);
     this._defaultSpawner = defaultSpawner;
+    this._findWinner = findWinner;
     Object.keys(aiTypes).forEach(name => {
       this.registerAI(name, aiTypes[name]);
     });
@@ -66,21 +75,21 @@ class Game<World, Round> {
 
   middleware(store: Store<World>) {
     return (next: any) => async (action: any) => {
-      if (action.type === "@@COR//TAKE_TURN") {
+      if (action.type === '@@COR//TAKE_TURN') {
         return this.run(action.payload);
-      } else if (action.type === "@@COR//ADD_AI") {
+      } else if (action.type === '@@COR//ADD_AI') {
         const ai = await this.addAI(
           action.payload.ai,
           action.payload.script,
-          action.payload.spawner
+          action.payload.spawner,
         );
         return next({
-          type: "@@COR//AI_ADDED",
+          type: '@@COR//AI_ADDED',
           payload: {
             id: ai.id,
             type: action.payload.ai,
-            data: action.payload.data
-          }
+            data: action.payload.data,
+          },
         });
       } else {
         return next(action);
@@ -111,12 +120,15 @@ class Game<World, Round> {
   }
 
   async run(round: Round) {
+    const state = this.store.getState();
+    if (state.ais.winner) {
+      return;
+    }
     for (let ai of this._ais) {
       const outputs = await ai._run(this._store.getState().game, round);
       for (let output of outputs) {
-
         await this._store.dispatch({
-          ...output as any,
+          ...(output as any),
           meta: {
             ...(output as any).meta,
             ai: {
@@ -125,6 +137,15 @@ class Game<World, Round> {
             },
           },
         } as any);
+      }
+    }
+    if (this._findWinner) {
+      const winner = this._findWinner(this.store.getState().game);
+      if (winner) {
+        this.store.dispatch({
+          type: '@@COR//FOUND_WINNER',
+          payload: winner,
+        });
       }
     }
   }

@@ -2,6 +2,7 @@
 
 const createDefaults = () => ({
   types: [],
+  winner: undefined,
 });
 
 export default (state = createDefaults(), action: any) => {
@@ -10,6 +11,11 @@ export default (state = createDefaults(), action: any) => {
       return {
         ...state,
         types: action.payload,
+      };
+    case '@@COR//FOUND_WINNER':
+      return {
+        ...state,
+        winner: action.payload,
       };
     default:
       return state;

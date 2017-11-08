@@ -32,14 +32,15 @@ describe('simple AI', () => {
       addAI(
         'simple',
         `
-      module.exports = [round.increment ? {type:"INCREMENT"} : {type:"DECREMENT"}]
-    `,
+          module.exports = [round.increment ? {type:"INCREMENT"} : {type:"DECREMENT"}]
+        `,
       ),
     );
     await game.store.dispatch(takeTurn({ increment: true }));
     expect(game.store.getState()).to.be.eql({
       ais: {
         types: ['simple'],
+        winner: undefined,
       },
       game: 1,
     });
