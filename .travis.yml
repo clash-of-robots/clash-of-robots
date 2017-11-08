@@ -28,3 +28,5 @@ deploy:
   file:
     - dist/clash-of-robots.min.js
     - dist/clash-of-robots.min.js.map
+  on:
+    tags: true
