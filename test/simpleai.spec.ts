@@ -1,26 +1,46 @@
 import Game, { AI, addAI, takeTurn } from "../src/Game";
 import { createStore } from "redux";
+import { expect } from 'chai';
 
-interface World {}
+type World = number;
 
-class SimpleAI extends AI<World, World, void> {
-  createFogOfWar(world: World) {
-    return world;
-  }
+interface Round {
+  increment: boolean
 }
 
-describe("Simple AI", () => {
-  let reducer;
-  let game: Game<World, any>;
+const reducer = (state = 0, action: any) => {
+  switch (action.type) {
+    case 'INCREMENT':
+      return state + 1;
+    case 'DECREMENT':
+      return state - 1;
+    default:
+      return state;
+  }
+};
+
+describe("simple AI", () => {
+  let game: Game<World, Round>;
 
   beforeEach(async () => {
-    game = new Game(() => ({}));
-    game.registerAI("simple", () => new SimpleAI());
+    game = new Game(reducer);
   });
 
-  it("sdf", async () => {
-    const ai = new SimpleAI();
-    await game.store.dispatch(addAI("simple", 'module.exports = [{type:"TEST"}]'));
-    await game.store.dispatch(takeTurn(null));
+  it("should be able to run a few rounds", async () => {
+    await game.store.dispatch(addAI("simple", `
+      module.exports = [round.increment ? {type:"INCREMENT"} : {type:"DECREMENT"}]
+    `));
+    await game.store.dispatch(takeTurn({ increment: true }));
+    expect(game.store.getState()).to.be.eql({
+      ais: {
+        types: ['simple'],
+      },
+      game: 1,
+    });
+    await game.store.dispatch(takeTurn({ increment: true }));
+    expect(game.store.getState().game).to.be.eql(2);
+
+    await game.store.dispatch(takeTurn({ increment: false }));
+    expect(game.store.getState().game).to.be.eql(1);
   });
 });

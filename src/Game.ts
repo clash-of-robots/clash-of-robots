@@ -1,8 +1,17 @@
 import AI from "./ai/AI";
 import Spawner from "./types/Spawner";
 import * as uuid from "uuid";
-import { createStore, Store, Action, Reducer, applyMiddleware, combineReducers } from "redux";
+import {
+  createStore,
+  Store,
+  Action,
+  Reducer,
+  applyMiddleware,
+  combineReducers,
+  Middleware,
+} from "redux";
 import functionSpawner from './ai/spawner';
+import ais from './reducers/ais';
 
 export { default as AI } from "./ai/AI";
 export { default as functionSpawner } from "./ai/spawner";
@@ -13,30 +22,42 @@ type StoreType<World> = {
   game: World
 };
 
-export interface Options {
-  spawner?: Spawner,
+export interface Options<World, Round> {
+  defaultSpawner?: string;
   additionalReducers?: {[name: string]: Reducer<any>};
+  aiTypes?: {[name: string]: () => AI<World, any, Round> };
+  middlewares?: Middleware[];
 }
 
 class Game<World, Round> {
   private _ais: AI<World, any, Round>[] = [];
-  private _spawner: Spawner;
+  private _spawners: {[name: string]: Spawner} = {};
   private _store: Store<StoreType<World>>;
   private _aiTypes: { [id: string]: () => AI<World, any, Round> } = {};
+  private _defaultSpawner: string;
 
   constructor(reducer: Reducer<World>, {
-    spawner = functionSpawner,
     additionalReducers = {},
-  }: Options = {}) {
+    aiTypes = {
+      simple: () => new AI(),
+    },
+    middlewares = [],
+    defaultSpawner = 'javascript-function',
+  }: Options<World, Round> = {}) {
     const store = createStore<StoreType<World>>(
       combineReducers({
         game: reducer,
+        ais,
         ...additionalReducers,
       }),
-      applyMiddleware(this.middleware.bind(this))
+      applyMiddleware(this.middleware.bind(this), ...middlewares),
     );
     this._store = store;
-    this._spawner = spawner as any;
+    this.registerSpawner('javascript-function', functionSpawner as any);
+    this._defaultSpawner = defaultSpawner;
+    Object.keys(aiTypes).forEach(name => {
+      this.registerAI(name, aiTypes[name]);
+    });
   }
 
   get store() {
@@ -48,7 +69,11 @@ class Game<World, Round> {
       if (action.type === "@@COR//TAKE_TURN") {
         return this.run(action.payload);
       } else if (action.type === "@@COR//ADD_AI") {
-        const ai = await this.addAI(action.payload.ai, action.payload.script);
+        const ai = await this.addAI(
+          action.payload.ai,
+          action.payload.script,
+          action.payload.spawner
+        );
         return next({
           type: "@@COR//AI_ADDED",
           payload: {
@@ -65,12 +90,21 @@ class Game<World, Round> {
 
   registerAI(name: string, creator: () => AI<World, any, Round>) {
     this._aiTypes[name] = creator;
+    this.store.dispatch({
+      type: '@@COR//ADD_AI_TYPE',
+      payload: Object.keys(this._aiTypes),
+    });
   }
 
-  async addAI(type: string, script: string) {
+  registerSpawner(name: string, spawner: Spawner) {
+    this._spawners[name] = spawner;
+  }
+
+  async addAI(type: string, script: string, spawner?: string) {
     const ai = this._aiTypes[type]();
     ai.id = uuid.v4();
-    await ai.load(script, this._spawner);
+    const spawnerName = spawner || this._defaultSpawner;
+    await ai.load(script, this._spawners[spawnerName]);
     this._ais.push(ai);
     return ai;
   }
