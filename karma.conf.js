@@ -11,21 +11,27 @@ const customLaunchers = {
     browserName: 'firefox',
     version: '52',
   },
-  /*sl_ios_safari: {
+  sl_safari: {
     base: 'SauceLabs',
-    browserName: 'iphone',
-    version: '11.0'
-  },*/
-  /*sl_ios_android: {
-    base: 'SauceLabs',
-    browserName: 'Android',
-    platformVersion: '7.1'
-  },*/
+    browserName: 'safari',
+    version: '11',
+  },
   sl_edge: {
     base: 'SauceLabs',
     browserName: 'microsoftedge',
     platform: 'Windows 10',
   },
+  /*sl_ios_safari: {
+    base: 'SauceLabs',
+    browserName: 'iphone',
+    version: '11.0'
+  },*/
+  /*sl_android: {
+    base: 'SauceLabs',
+    browserName: 'chrome',
+    deviceName: 'Android GoogleAPI Emulator',
+    platformVersion: '7.1',
+  },*/
 };
 
 module.exports = function(config) {
